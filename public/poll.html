@@ -5,29 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <title>Answer this Poll</title>
   </head>
   <body>
-    <nav class="navbar navbar-dark bg-primary navbar-expand-md">
-    <a class="navbar-brand" href="/">Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <div class="container">
+      <nav class="navbar navbar-light bg-dark navbar-expand-md navbar-static-top navvy">
+        <div class="container-fluid">
+          <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed icon-bars" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Home</a>
+      </div>
 
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-      <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8080/my-polls.html">My Polls</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8080/newpoll.html">New Polls</a>
-      </li>
-    </ul>
-  </div>
-</nav>
- 
+       <div class="collapse navbar-collapse text-center" id="bs-example-navbar-collapse-1" role="navigation">
+        <ul class="nav navbar-nav">
+          <li><a class="nav-link" href="/my-polls.html">My Polls</a></li>
+          <li><a class="nav-link" href="/newpoll.html">Make a New Poll</a></li>
+        </ul>
+      </div>
+        </div>
+    </nav>
+    </div>
   <div class="container">
   <h1 id="poll-goes-here" class="text-center my-5"></h1>
   
@@ -35,8 +39,7 @@
     <div class="row">
       <div class="col-lg-2"></div>
       <div class="col-sm-6 col-lg-4">
-        <br>
-        <div style="height:250px;width:100%" class="py-3 px-3">
+        <div style="width:100%" class="py-3 px-3">
           <form id="vote-form" action="/api/vote" method="post"></form>
         </div>
       </div>
@@ -51,6 +54,7 @@
   <br>
    
   </div>
+  <script scr="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
@@ -65,6 +69,7 @@
       const wind = window.location.href;
       const id = wind.slice(wind.lastIndexOf('/') + 1);
       const ip = wind.slice(0, wind.indexOf('/api'));
+      console.log(ip)
       document.addEventListener('DOMContentLoaded', function() {
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems, options);
@@ -87,6 +92,7 @@
             const options = data.voteOptions;
             const optionsArray = [];
             const votedArray = data.usersVoted;
+            console.log(votedArray, ip);
             if (votedArray.includes(ip)){
                 voted = true;
             }
@@ -101,6 +107,8 @@
             }
             console.log(voted)
             form.innerHTML += `<input type="submit" value="Vote" class="btn">`;
+            form.innerHTML += `<a class="btn" target='_blank' href='https://twitter.com/intent/tweet?hashtags=OyoVotes&related=freecodecamp&text="Check out this poll on ${data.voteName} at ${wind} and make your vote. Share with your fiends too"'><i class='fa fa-twitter'></a>`;
+            form.innerHTML += `<a class="btn" href="whatsapp://send?text=Check out this poll on ${data.voteName} at ${wind} and make your vote. Share with your fiends too" data-action="share/whatsapp/share"><i class="fa fa-whatsapp"></i></a>`
             if (chartContainer){
             var chart = new CanvasJS.Chart("chartContainer", {
               	animationEnabled: true,

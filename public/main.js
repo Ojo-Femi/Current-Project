@@ -42,9 +42,10 @@ const login = document.getElementById('login');
 var showPolls = document.getElementById('show-polls');
 
 if (showPolls) {
-  fetch('http://localhost:8080/seeall')
+  fetch('/seeall')
     .then(res => res.json())
     .then( data => {
+      console.log(data)
       return data.map( x => {
         showPolls.innerHTML += `<div class="container">`;
         showPolls.innerHTML += `<h6 class="center my-3"><a href='/api/poll/${x.uniqueId}'>${x.voteName}</a><h6>`;
@@ -59,7 +60,7 @@ var pollsDisplay = document.getElementById('polls-display');
 if (pollsDisplay) {
   console.log(window.location.href);
   // this will be the url eventually, but then we want to get the ip address of the requester eventually
-  fetch('http://localhost:8080/seemine')
+  fetch('/seemine')
     .then(res => res.json())
     .then( data => {
       console.log(data);
@@ -68,13 +69,13 @@ if (pollsDisplay) {
       } else {
         data.map( x => {
           pollsDisplay.innerHTML += `<div class="container">`;
-          pollsDisplay.innerHTML += `<h6 class="center my-3 pt-3"><a href='/api/poll/${x.uniqueId}'>${x.voteName}</a><a class="px-3 confirmation" href="api/del/${x.uniqueId}">x</a><h6>`;
+          pollsDisplay.innerHTML += `<h6 class="center my-3 pt-3"><a href='/api/poll/${x.uniqueId}'>${x.voteName}</a><a class="px-3 confirmation" href="api/del/${x.uniqueId}" style="margin:15px">X</a><h6>`;
           pollsDisplay.innerHTML == `</div>`;
         });
       }
       return $(document).ready(() => {
         $('.confirmation').on('click', () => {
-            return confirm('Are you sure?');
+            return confirm('Are you sure you want to delete this Poll?');
         });
       });
     })

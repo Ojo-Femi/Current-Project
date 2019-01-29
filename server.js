@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 
 
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static('public'));
 
 app.get('/seeall', (req,res) => {
   MongoClient.connect(process.env.mongoURL, (err,db) => {
@@ -30,8 +31,10 @@ app.get('/seeall', (req,res) => {
 
 app.get('/seemine', (req,res) => {
   const findIp = req.headers['x-forwarded-for'] || req.headers.referer;
+  
   const ip = req.headers['x-forwarded-for'] !== undefined ? findIp.slice(0, findIp.indexOf(',')) : findIp.slice(0, findIp.indexOf('/my-polls'));
   const myQuery = {ownerOfPoll: ip};
+  console.log(findIp,ip)
   MongoClient.connect(process.env.mongoURL, (err,db) => {
     if (err) throw err;
     var dbo = db.db('votersapp');
@@ -42,8 +45,8 @@ app.get('/seemine', (req,res) => {
 });
 
 app.post('/api/poll', (req,res) => {
-  const findIp = req.headers.referer;
-  const ip = findIp.slice(0, findIp.indexOf('/newpoll'));
+  const findIp = req.headers['x-forwarded-for'] || req.headers.referer;
+  const ip = req.headers['x-forwarded-for'] !== undefined ? findIp.slice(0, findIp.indexOf(',')) : findIp.slice(0, findIp.indexOf('/newpoll'));
   const obj = {};
   req.body['poll-options'].split(',').map( x => obj[x] = 0);
   var vote = {
@@ -58,7 +61,6 @@ app.post('/api/poll', (req,res) => {
     var dbo = db.db('votersapp');
     dbo.collection('votes').insertOne(vote, (err, response) => {
       if (err) throw err;
-      console.log(response.result);
       res.redirect('/api/poll/' + vote.uniqueId);
       db.close();
     });
@@ -86,6 +88,7 @@ app.get('/api/:id', (req,res) => {
     var dbo = db.db('votersapp');
     dbo.collection('votes').findOne({uniqueId: id},{projection: {_id: 0}}, (err, response) => {
       if (err) throw err;
+      console.log(response)
       res.send(response);
       db.close();
     });
@@ -98,8 +101,8 @@ app.post('/api/vote', (req,res)=> {
   const id = findId.slice(findId.lastIndexOf('/') + 1);
   const option = req.body.option;
   
-  const findIp = req.headers.referer;
-  const ip = findIp.slice(0, findIp.indexOf('/api'))
+  const findIp = req.headers['x-forwarded-for'] || req.headers.referer;
+  const ip = req.headers['x-forwarded-for'] !== undefined ? findIp.slice(0, findIp.indexOf(',')) : findIp.slice(0, findIp.indexOf('/newpoll'));
   // console.log(ipVoted);
   MongoClient.connect(process.env.mongoURL, (err,db) => {
     if (err) throw err;
@@ -168,8 +171,8 @@ app.post('/create-account', (req,res) => {
   })
 });
 
-// Create a user array things, and setup unique ID for each user, so when they vote, we can
 
-const port = 8080;
-
-app.listen(port, () => console.log(`We're listening on ${port}`));
+// listen for requests :)
+const listener = app.listen(process.env.PORT, function() {
+  console.log('Your app is listening on port ' + listener.address().port);
+});

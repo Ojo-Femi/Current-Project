@@ -4,7 +4,7 @@
   "description": "This is me trying to build my own votes app",
   "main": "app.js",
   "scripts": {
-    "start": "npm start"
+    "start": "node server"
   },
   "keywords": [
     "Votes",

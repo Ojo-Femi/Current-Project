@@ -1,0 +1,54 @@
+.navvy {
+   border-radius: 0px;
+   margin: 0px;
+   height: 70px;
+   padding-top: 5px;
+}
+.nav-link:hover {
+  background-color: #FAFAFA;
+  font-size: 20px;
+  font-weight: bolder;
+}
+.icon-bar {
+  background-color: #337ab7;
+}
+h6 {
+  font-size: 16px;
+}
+
+p{
+  font-size: 16px; 
+}
+
+.question{
+  margin-top: 5px;
+}
+.icon-bar-light {
+  background-color: #23527C;
+}
+
+input[type=text] {
+  padding: 3px;
+  margin: 0 0 0 30px;
+  width: 300px;
+}
+@media screen and (min-width: 768px) {
+  .navbar .navbar-nav {
+    display: inline-block;
+    float: none;
+  }
+  li{
+    padding-right: 30px;
+    font-size: 19px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .navbar-collapse {
+    margin-top: 15px;
+    background-color: #FAFAFA;
+  }
+  li {
+    font-size: 17px;
+  }
+}
+      
